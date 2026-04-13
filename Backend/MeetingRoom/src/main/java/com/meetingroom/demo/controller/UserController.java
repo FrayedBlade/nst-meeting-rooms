@@ -5,6 +5,8 @@ import com.meetingroom.demo.model.User;
 import com.meetingroom.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,20 +25,23 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public User getUserById(@PathVariable Integer id) {
-        return userService.findById(id).orElse(null);
+    public ResponseEntity<User> getUserById(@PathVariable Integer id) {
+        return userService.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public User createUser(@Valid @RequestBody User user) {
         return userService.save(user);
     }
 
     @PutMapping("/{id}")
-    public User updateUser(@PathVariable Integer id, @Valid @RequestBody User updatedUser) {
+    public ResponseEntity<User> updateUser(@PathVariable Integer id, @Valid @RequestBody User updatedUser) {
         Optional<User> existing = userService.findById(id);
         if (existing.isEmpty()) {
-            return null;
+            return ResponseEntity.notFound().build();
         }
         User user = existing.get();
         user.setFirstName(updatedUser.getFirstName());
@@ -45,10 +50,11 @@ public class UserController {
         user.setEmail(updatedUser.getEmail());
         user.setPhone(updatedUser.getPhone());
 
-        return userService.save(user);
+        return ResponseEntity.ok(userService.save(user));
     }
 
     @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Integer id) {
         userService.deleteById(id);
     }

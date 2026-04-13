@@ -1,1 +1,5 @@
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\test\java\com\meetingroom\demo\MeetingRoomApplicationTests.java
+/app/src/test/java/com/meetingroom/demo/MeetingRoomApplicationTests.java
+/app/src/test/java/com/meetingroom/demo/controller/RoomControllerTest.java
+/app/src/test/java/com/meetingroom/demo/service/BookingServiceTest.java
+/app/src/test/java/com/meetingroom/demo/service/RoomServiceTest.java
+/app/src/test/java/com/meetingroom/demo/service/UserServiceTest.java

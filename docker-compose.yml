@@ -49,7 +49,7 @@ services:
       context: ./Frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: ""
+        VITE_API_URL: "http://localhost"
     container_name: meetingroom-frontend
     ports:
       - "80:80"

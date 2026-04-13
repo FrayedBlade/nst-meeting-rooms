@@ -1,1 +1,5 @@
-com\meetingroom\demo\MeetingRoomApplicationTests.class
+com/meetingroom/demo/MeetingRoomApplicationTests.class
+com/meetingroom/demo/service/BookingServiceTest.class
+com/meetingroom/demo/service/RoomServiceTest.class
+com/meetingroom/demo/controller/RoomControllerTest.class
+com/meetingroom/demo/service/UserServiceTest.class

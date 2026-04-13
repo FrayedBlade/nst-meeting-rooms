@@ -121,7 +121,7 @@ jobs:
           file: ./Frontend/Dockerfile
           push: true
           build-args: |
-            VITE_API_URL=
+            VITE_API_URL=http://localhost
           tags: |
             ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:latest
             ${{ env.REGISTRY }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}

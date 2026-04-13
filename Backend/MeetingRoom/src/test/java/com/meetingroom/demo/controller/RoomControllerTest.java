@@ -85,7 +85,7 @@ class RoomControllerTest {
         mockMvc.perform(post("/room")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(newRoom)))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.roomName", is("Conference Room A")));
     }
 
@@ -119,11 +119,11 @@ class RoomControllerTest {
     }
 
     @Test
-    void deleteRoom_ShouldReturnOk() throws Exception {
+    void deleteRoom_ShouldReturnNoContent() throws Exception {
         doNothing().when(roomService).deleteById(1);
 
         mockMvc.perform(delete("/room/1"))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
 
         verify(roomService).deleteById(1);
     }

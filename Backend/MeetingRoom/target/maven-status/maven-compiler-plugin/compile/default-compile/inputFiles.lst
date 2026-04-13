@@ -1,14 +1,14 @@
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\config\WebConfig.java
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\controller\BookingController.java
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\controller\RoomController.java
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\controller\UserController.java
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\MeetingRoomApplication.java
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\model\Booking.java
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\model\Room.java
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\model\User.java
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\repository\BookingRepository.java
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\repository\RoomRepository.java
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\repository\UserRepository.java
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\service\BookingService.java
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\service\RoomService.java
-C:\Users\user\Documents\Master\nst\backup za slanje\NSTSeminarski\NST Seminarski\Backend\MeetingRoom\src\main\java\com\meetingroom\demo\service\UserService.java
+/app/src/main/java/com/meetingroom/demo/MeetingRoomApplication.java
+/app/src/main/java/com/meetingroom/demo/config/WebConfig.java
+/app/src/main/java/com/meetingroom/demo/controller/BookingController.java
+/app/src/main/java/com/meetingroom/demo/controller/RoomController.java
+/app/src/main/java/com/meetingroom/demo/controller/UserController.java
+/app/src/main/java/com/meetingroom/demo/model/Booking.java
+/app/src/main/java/com/meetingroom/demo/model/Room.java
+/app/src/main/java/com/meetingroom/demo/model/User.java
+/app/src/main/java/com/meetingroom/demo/repository/BookingRepository.java
+/app/src/main/java/com/meetingroom/demo/repository/RoomRepository.java
+/app/src/main/java/com/meetingroom/demo/repository/UserRepository.java
+/app/src/main/java/com/meetingroom/demo/service/BookingService.java
+/app/src/main/java/com/meetingroom/demo/service/RoomService.java
+/app/src/main/java/com/meetingroom/demo/service/UserService.java
