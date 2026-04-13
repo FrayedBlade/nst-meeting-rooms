@@ -12,7 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "[User]")
+@Table(name = "app_user")
 @Data
 @NoArgsConstructor
 public class User {
