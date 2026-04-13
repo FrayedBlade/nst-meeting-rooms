@@ -21,7 +21,6 @@ function UserList() {
   const [selectedUser, setSelectedUser] = useState(null);
   const [userBookings, setUserBookings] = useState([]);
   const [activeBookings, setActiveBookings] = useState([]);
-  const [showBookingHistory, setShowBookingHistory] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -266,7 +265,6 @@ function UserList() {
     setSelectedUser(null);
     setUserBookings([]);
     setActiveBookings([]);
-    setShowBookingHistory(false);
   };
 
   return (
