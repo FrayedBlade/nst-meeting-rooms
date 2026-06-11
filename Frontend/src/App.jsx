@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, NavLink, Navigate } from "react
 import RoomList from "./components/RoomList";
 import UserList from "./components/UserList";
 import BookingList from "./components/BookingList";
+import BuildingList from "./components/BuildingList";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
@@ -54,6 +55,7 @@ function AppLayout() {
             <Route path="/rooms" element={<ProtectedRoute><RoomList /></ProtectedRoute>} />
             <Route path="/users" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
             <Route path="/bookings" element={<ProtectedRoute><BookingList /></ProtectedRoute>} />
+            <Route path="/buildings" element={<ProtectedRoute><BuildingList /></ProtectedRoute>} />
             <Route path="/" element={<Navigate to="/rooms" replace />} />
           </Routes>
         </div>
