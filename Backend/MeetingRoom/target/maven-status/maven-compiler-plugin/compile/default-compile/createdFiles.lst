@@ -19,4 +19,5 @@ com/meetingroom/demo/service/RoomService.class
 com/meetingroom/demo/model/Building.class
 com/meetingroom/demo/service/BuildingService.class
 com/meetingroom/demo/service/RoleService.class
+com/meetingroom/demo/config/SecurityConfig.class
 com/meetingroom/demo/model/Booking.class
