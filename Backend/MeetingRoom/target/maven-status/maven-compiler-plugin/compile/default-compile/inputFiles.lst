@@ -1,4 +1,5 @@
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/MeetingRoomApplication.java
+/home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/config/DataInitializer.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/config/SecurityConfig.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/config/WebConfig.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/controller/AuthController.java

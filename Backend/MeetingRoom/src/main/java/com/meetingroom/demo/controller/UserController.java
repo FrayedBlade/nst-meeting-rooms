@@ -49,6 +49,11 @@ public class UserController {
         user.setPersonalID(updatedUser.getPersonalID());
         user.setEmail(updatedUser.getEmail());
         user.setPhone(updatedUser.getPhone());
+        user.setRole(updatedUser.getRole());
+        // Only update password if a new one was provided
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
+            user.setPassword(updatedUser.getPassword());
+        }
 
         return ResponseEntity.ok(userService.save(user));
     }

@@ -54,7 +54,16 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
-                .anyRequest().permitAll()
+                .requestMatchers("/auth/**", "/actuator/health").permitAll()
+                .requestMatchers(org.springframework.http.HttpMethod.GET,
+                        "/room/**", "/building/**", "/user/**", "/booking/**", "/role/**").authenticated()
+                .requestMatchers(org.springframework.http.HttpMethod.POST,
+                        "/room/**", "/building/**", "/user/**", "/booking/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.PUT,
+                        "/room/**", "/building/**", "/user/**", "/booking/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE,
+                        "/room/**", "/building/**", "/user/**", "/booking/**").hasRole("ADMIN")
+                .anyRequest().authenticated()
             );
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
