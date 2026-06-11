@@ -3,6 +3,7 @@ com/meetingroom/demo/model/User.class
 com/meetingroom/demo/repository/RoomRepository.class
 com/meetingroom/demo/repository/BookingRepository.class
 com/meetingroom/demo/repository/UserRepository.class
+com/meetingroom/demo/repository/BuildingRepository.class
 com/meetingroom/demo/service/UserService.class
 com/meetingroom/demo/MeetingRoomApplication.class
 com/meetingroom/demo/controller/RoomController.class
@@ -11,4 +12,5 @@ com/meetingroom/demo/service/BookingService.class
 com/meetingroom/demo/controller/UserController.class
 com/meetingroom/demo/model/Room.class
 com/meetingroom/demo/service/RoomService.class
+com/meetingroom/demo/model/Building.class
 com/meetingroom/demo/model/Booking.class
