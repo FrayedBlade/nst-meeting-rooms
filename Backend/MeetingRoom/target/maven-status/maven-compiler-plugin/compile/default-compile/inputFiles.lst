@@ -1,11 +1,15 @@
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/MeetingRoomApplication.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/config/SecurityConfig.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/config/WebConfig.java
+/home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/controller/AuthController.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/controller/BookingController.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/controller/BuildingController.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/controller/RoleController.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/controller/RoomController.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/controller/UserController.java
+/home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/dto/AuthResponse.java
+/home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/dto/LoginRequest.java
+/home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/dto/RegisterRequest.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/model/Booking.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/model/Building.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/model/Role.java
@@ -16,6 +20,9 @@
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/repository/RoleRepository.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/repository/RoomRepository.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/repository/UserRepository.java
+/home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/security/CustomUserDetailsService.java
+/home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/security/JwtAuthenticationFilter.java
+/home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/security/JwtService.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/service/BookingService.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/service/BuildingService.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/service/RoleService.java
