@@ -6,10 +6,12 @@
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/controller/UserController.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/model/Booking.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/model/Building.java
+/home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/model/Role.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/model/Room.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/model/User.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/repository/BookingRepository.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/repository/BuildingRepository.java
+/home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/repository/RoleRepository.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/repository/RoomRepository.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/repository/UserRepository.java
 /home/user/Documents/master/automatizacija/nst meetingroom/Backend/MeetingRoom/src/main/java/com/meetingroom/demo/service/BookingService.java

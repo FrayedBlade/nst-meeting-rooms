@@ -1,4 +1,5 @@
 com/meetingroom/demo/controller/BookingController.class
+com/meetingroom/demo/model/Role.class
 com/meetingroom/demo/model/User.class
 com/meetingroom/demo/repository/RoomRepository.class
 com/meetingroom/demo/repository/BookingRepository.class
@@ -6,6 +7,7 @@ com/meetingroom/demo/repository/UserRepository.class
 com/meetingroom/demo/controller/BuildingController.class
 com/meetingroom/demo/repository/BuildingRepository.class
 com/meetingroom/demo/service/UserService.class
+com/meetingroom/demo/repository/RoleRepository.class
 com/meetingroom/demo/MeetingRoomApplication.class
 com/meetingroom/demo/controller/RoomController.class
 com/meetingroom/demo/config/WebConfig.class
