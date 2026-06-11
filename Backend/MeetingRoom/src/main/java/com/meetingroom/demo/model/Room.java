@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "Room")
@@ -36,4 +37,9 @@ public class Room {
     @Max(value = 100, message = "Capacity cannot exceed 100.")
     @Column(nullable = false)
     private Integer capacity;
+
+    @ManyToOne
+    @JoinColumn(name = "building_id")
+    @JsonIgnoreProperties("rooms")
+    private Building building;
 }

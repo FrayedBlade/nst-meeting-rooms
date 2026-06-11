@@ -3,12 +3,20 @@
 -- Column names are unquoted so PostgreSQL stores them as lowercase,
 -- matching what Hibernate sends (PhysicalNamingStrategyStandardImpl + PostgreSQL case-folding).
 
+CREATE TABLE IF NOT EXISTS building (
+    buildingid SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    address VARCHAR(150),
+    numberoffloors INTEGER CHECK (numberoffloors >= 1)
+);
+
 CREATE TABLE IF NOT EXISTS room (
     roomid SERIAL PRIMARY KEY,
     roomname VARCHAR(100) NOT NULL,
     roomnumber VARCHAR(6) NOT NULL UNIQUE,
     location VARCHAR(100),
-    capacity INTEGER NOT NULL CHECK (capacity >= 1 AND capacity <= 100)
+    capacity INTEGER NOT NULL CHECK (capacity >= 1 AND capacity <= 100),
+    building_id INTEGER REFERENCES building(buildingid) ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS app_user (
