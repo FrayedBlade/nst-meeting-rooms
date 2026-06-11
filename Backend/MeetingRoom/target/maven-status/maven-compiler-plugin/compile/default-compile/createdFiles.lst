@@ -12,9 +12,11 @@ com/meetingroom/demo/MeetingRoomApplication.class
 com/meetingroom/demo/controller/RoomController.class
 com/meetingroom/demo/config/WebConfig.class
 com/meetingroom/demo/service/BookingService.class
+com/meetingroom/demo/controller/RoleController.class
 com/meetingroom/demo/controller/UserController.class
 com/meetingroom/demo/model/Room.class
 com/meetingroom/demo/service/RoomService.class
 com/meetingroom/demo/model/Building.class
 com/meetingroom/demo/service/BuildingService.class
+com/meetingroom/demo/service/RoleService.class
 com/meetingroom/demo/model/Booking.class
