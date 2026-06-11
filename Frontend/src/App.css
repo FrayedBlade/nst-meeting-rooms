@@ -67,15 +67,74 @@
   font-size: 1rem;
 }
 
-.sidebar-footer {
-  padding: 1.5rem;
-  border-top: 2px solid #555;
+.footer-user {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.user-email {
+  color: #ccc;
+  font-size: 0.75rem;
+  word-break: break-all;
   text-align: center;
 }
 
-.footer-info small {
-  color: #999;
-  font-size: 0.75rem;
+.user-role {
+  color: #aaa;
+  font-size: 0.7rem;
+  font-style: italic;
+}
+
+.btn-logout {
+  width: 100%;
+  background: #555;
+  color: #fff;
+  border: 1px solid #777;
+  font-size: 0.85rem;
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-logout:hover {
+  background: #c0392b;
+  border-color: #c0392b;
+}
+
+/* Login Page */
+.login-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #2c2c2c;
+}
+
+.login-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.login-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 0.25rem;
+  line-height: 1.3;
+}
+
+.login-subtitle {
+  text-align: center;
+  color: #888;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
 }
 
 /* Main Content */
