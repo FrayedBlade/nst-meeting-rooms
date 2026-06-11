@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
+import { useAuth } from "../context/AuthContext";
 
 function BookingList() {
+  const { role } = useAuth();
+  const isAdmin = role === "ROLE_ADMIN";
   const [bookings, setBookings] = useState([]);
   const [users, setUsers] = useState([]);
   const [rooms, setRooms] = useState([]);
@@ -347,12 +350,12 @@ function BookingList() {
           <button onClick={clearFilter} className="btn btn-custom btn-custom-secondary">
             Clear
           </button>
-          <button 
+          {isAdmin && <button 
             onClick={() => setShowCreateForm(!showCreateForm)} 
             className="btn btn-custom btn-custom-success ms-auto"
           >
             {showCreateForm ? "Cancel" : "New Booking"}
-          </button>
+          </button>}
         </div>
 
         {/* Create Booking Form */}
@@ -555,18 +558,18 @@ function BookingList() {
                         </>
                       ) : (
                         <>
-                          <button
+                          {isAdmin && <button
                             onClick={() => startEdit(booking)}
                             className="btn btn-sm btn-custom btn-custom-primary me-1"
                           >
                             Edit
-                          </button>
-                          <button
+                          </button>}
+                          {isAdmin && <button
                             onClick={() => deleteBooking(booking.bookingID)}
                             className="btn btn-sm btn-custom btn-custom-danger"
                           >
                             Delete
-                          </button>
+                          </button>}
                         </>
                       )}
                     </td>

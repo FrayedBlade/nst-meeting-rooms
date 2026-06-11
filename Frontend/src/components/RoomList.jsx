@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
+import { useAuth } from "../context/AuthContext";
 
 function RoomList() {
+  const { role } = useAuth();
+  const isAdmin = role === "ROLE_ADMIN";
   const [rooms, setRooms] = useState([]);
   const [newRoom, setNewRoom] = useState({
     roomName: "",
@@ -183,7 +186,7 @@ function RoomList() {
         )}
 
         {/* Add New Room Form */}
-        <div className="form-custom mb-4">
+        {isAdmin && <div className="form-custom mb-4">
           <h3>Add New Room</h3>
           <form onSubmit={createRoom} className="row g-3 align-items-end">
             <div className="col-md-3">
@@ -241,7 +244,7 @@ function RoomList() {
               </button>
             </div>
           </form>
-        </div>
+        </div>}
 
         {/* Rooms Table */}
         <div className="table-responsive">
@@ -349,18 +352,18 @@ function RoomList() {
                         </>
                       ) : (
                         <>
-                          <button
+                          {isAdmin && <button
                             onClick={() => startEdit(room)}
                             className="btn btn-sm btn-custom btn-custom-primary me-1"
                           >
                             Edit
-                          </button>
-                          <button
+                          </button>}
+                          {isAdmin && <button
                             onClick={() => deleteRoom(room.roomID)}
                             className="btn btn-sm btn-custom btn-custom-danger"
                           >
                             Delete
-                          </button>
+                          </button>}
                         </>
                       )}
                     </td>
