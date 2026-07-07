@@ -33,4 +33,7 @@ public class Booking {
     @NotNull(message = "End date and time is required.")
     @Column(nullable = false)
     private LocalDateTime endDateTime;
+
+    @Column(length = 20)
+    private String status;
 }

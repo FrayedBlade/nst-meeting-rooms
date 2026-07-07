@@ -42,5 +42,6 @@ CREATE TABLE IF NOT EXISTS booking (
     roomid INTEGER NOT NULL REFERENCES room(roomid) ON DELETE CASCADE,
     startdatetime TIMESTAMP NOT NULL,
     enddatetime TIMESTAMP NOT NULL,
+    status VARCHAR(20) DEFAULT 'APPROVED',
     CHECK (enddatetime > startdatetime)
 );
