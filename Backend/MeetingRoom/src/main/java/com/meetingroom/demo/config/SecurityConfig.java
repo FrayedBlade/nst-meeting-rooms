@@ -59,11 +59,14 @@ public class SecurityConfig {
                 .requestMatchers(org.springframework.http.HttpMethod.GET,
                         "/room/**", "/building/**", "/user/**", "/booking/**", "/role/**").authenticated()
                 .requestMatchers(org.springframework.http.HttpMethod.POST,
-                        "/room/**", "/building/**", "/user/**", "/booking/**").hasRole("ADMIN")
+                        "/room/**", "/building/**", "/user/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.POST, "/booking/**").authenticated()
                 .requestMatchers(org.springframework.http.HttpMethod.PUT,
-                        "/room/**", "/building/**", "/user/**", "/booking/**").hasRole("ADMIN")
+                        "/room/**", "/building/**", "/user/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.PUT, "/booking/**").authenticated()
                 .requestMatchers(org.springframework.http.HttpMethod.DELETE,
-                        "/room/**", "/building/**", "/user/**", "/booking/**").hasRole("ADMIN")
+                        "/room/**", "/building/**", "/user/**").hasRole("ADMIN")
+                .requestMatchers(org.springframework.http.HttpMethod.DELETE, "/booking/**").authenticated()
                 .anyRequest().authenticated()
             );
 

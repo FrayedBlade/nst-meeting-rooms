@@ -3,7 +3,7 @@ import api from "../api/api";
 import { useAuth } from "../context/AuthContext";
 
 function BookingList() {
-  const { role } = useAuth();
+  const { role, email } = useAuth();
   const isAdmin = role === "ROLE_ADMIN";
   const [bookings, setBookings] = useState([]);
   const [users, setUsers] = useState([]);
@@ -30,9 +30,11 @@ function BookingList() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
     fetchAllData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchAllData = async () => {
@@ -133,13 +135,14 @@ function BookingList() {
   };
 
   const isBookingActive = (booking) => {
-    return new Date(booking.endDateTime) > new Date();
+    const approved = booking.status == null || booking.status === "APPROVED";
+    return approved && new Date(booking.endDateTime) > new Date();
   };
 
   const validateBookingForm = (booking) => {
     setError("");
     
-    if (!booking.userID) {
+    if (isAdmin && !booking.userID) {
       setError("User is required");
       return false;
     }
@@ -175,8 +178,9 @@ function BookingList() {
     if (!validateBookingForm(newBooking)) return;
     
     try {
+      const ownUser = !isAdmin ? users.find(u => u.email === email) : null;
       const bookingData = {
-        user: { userID: parseInt(newBooking.userID) },
+        user: { userID: isAdmin ? parseInt(newBooking.userID) : ownUser?.userID },
         room: { roomID: parseInt(newBooking.roomID) },
         startDateTime: newBooking.startDateTime,
         endDateTime: newBooking.endDateTime
@@ -192,6 +196,7 @@ function BookingList() {
       setNewBookingBuilding("");
       setShowCreateForm(false);
       setError("");
+      if (!isAdmin) setSuccessMsg("Booking request submitted — awaiting admin approval.");
       fetchAllData();
     } catch (err) {
       console.error("Error creating booking:", err);
@@ -269,6 +274,25 @@ function BookingList() {
     }
   };
 
+  const approveBooking = async (id) => {
+    try {
+      await api.put(`/booking/${id}/approve`);
+      fetchAllData();
+    } catch (err) {
+      const msg = err.response?.data;
+      setError(typeof msg === "string" ? msg : "Failed to approve booking — room may already be booked for this time.");
+    }
+  };
+
+  const rejectBooking = async (id) => {
+    try {
+      await api.put(`/booking/${id}/reject`);
+      fetchAllData();
+    } catch {
+      setError("Failed to reject booking");
+    }
+  };
+
   const applyFilter = () => {
     if (filterBy === "all") {
       fetchBookings();
@@ -288,10 +312,10 @@ function BookingList() {
   };
 
   const getDisplayedBookings = () => {
-    if (showActiveOnly) {
-      return bookings.filter(booking => isBookingActive(booking));
-    }
-    return bookings;
+    let result = bookings;
+    if (filterBy === "pending") result = result.filter(b => b.status === "PENDING");
+    if (showActiveOnly) result = result.filter(b => isBookingActive(b));
+    return result;
   };
 
   return (
@@ -312,6 +336,12 @@ function BookingList() {
             ></button>
           </div>
         )}
+        {successMsg && (
+          <div className="alert alert-success alert-custom alert-dismissible fade show" role="alert">
+            {successMsg}
+            <button type="button" className="btn-close" onClick={() => setSuccessMsg("")} aria-label="Close"></button>
+          </div>
+        )}
 
         {/* Filters and Actions */}
         <div className="mb-4 d-flex gap-2 align-items-end flex-wrap">
@@ -326,6 +356,7 @@ function BookingList() {
               <option value="user">By User</option>
               <option value="room">By Room</option>
               <option value="active">Active Only</option>
+              {isAdmin && <option value="pending">Pending Only</option>}
             </select>
           </div>
 
@@ -369,12 +400,18 @@ function BookingList() {
           >
             {showCreateForm ? "Cancel" : "New Booking"}
           </button>}
+          {!isAdmin && <button
+            onClick={() => setShowCreateForm(!showCreateForm)}
+            className="btn btn-custom btn-custom-success ms-auto"
+          >
+            {showCreateForm ? "Cancel" : "Request Booking"}
+          </button>}
         </div>
 
         {/* Create Booking Form */}
         {showCreateForm && (
           <div className="form-custom mb-4">
-            <h3>Create New Booking</h3>
+            <h3>{isAdmin ? "Create New Booking" : "Request a Booking"}</h3>
             <form onSubmit={createBooking} className="row g-3">
               <div className="col-md-3">
                 <label className="form-label">Building</label>
@@ -392,7 +429,7 @@ function BookingList() {
                   ))}
                 </select>
               </div>
-              <div className="col-md-3">
+              {isAdmin && <div className="col-md-3">
                 <label className="form-label">User *</label>
                 <select
                   className="form-select"
@@ -407,7 +444,7 @@ function BookingList() {
                     </option>
                   ))}
                 </select>
-              </div>
+              </div>}
               <div className="col-md-3">
                 <label className="form-label">Room *</label>
                 <select
@@ -503,19 +540,23 @@ function BookingList() {
                   <tr key={booking.bookingID}>
                     <td>
                       {editingBooking === booking.bookingID ? (
-                        <select
-                          className="form-select form-select-sm"
-                          value={editForm.userID}
-                          onChange={(e) => setEditForm({ ...editForm, userID: e.target.value })}
-                          required
-                        >
-                          <option value="">Select User</option>
-                          {users.map(user => (
-                            <option key={user.userID} value={user.userID}>
-                              {user.firstName} {user.lastName}
-                            </option>
-                          ))}
-                        </select>
+                        isAdmin ? (
+                          <select
+                            className="form-select form-select-sm"
+                            value={editForm.userID}
+                            onChange={(e) => setEditForm({ ...editForm, userID: e.target.value })}
+                            required
+                          >
+                            <option value="">Select User</option>
+                            {users.map(user => (
+                              <option key={user.userID} value={user.userID}>
+                                {user.firstName} {user.lastName}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <span className="fw-medium">{booking.user?.firstName} {booking.user?.lastName}</span>
+                        )
                       ) : (
                         booking.user ? `${booking.user.firstName} ${booking.user.lastName}` : "Unknown"
                       )}
@@ -569,7 +610,11 @@ function BookingList() {
                       )}
                     </td>
                     <td>
-                      {isBookingActive(booking) ? (
+                      {booking.status === "PENDING" ? (
+                        <span className="badge badge-custom bg-warning text-dark">Pending</span>
+                      ) : booking.status === "REJECTED" ? (
+                        <span className="badge badge-custom bg-danger">Rejected</span>
+                      ) : new Date(booking.endDateTime) > new Date() ? (
                         <span className="badge badge-custom bg-success">Active</span>
                       ) : (
                         <span className="badge badge-custom bg-secondary">Completed</span>
@@ -593,17 +638,29 @@ function BookingList() {
                         </>
                       ) : (
                         <>
-                          {isAdmin && <button
+                          {isAdmin && booking.status === "PENDING" && <button
+                            onClick={() => approveBooking(booking.bookingID)}
+                            className="btn btn-sm btn-custom btn-custom-success me-1"
+                          >
+                            Approve
+                          </button>}
+                          {isAdmin && booking.status === "PENDING" && <button
+                            onClick={() => rejectBooking(booking.bookingID)}
+                            className="btn btn-sm btn-custom btn-custom-danger me-1"
+                          >
+                            Reject
+                          </button>}
+                          {(isAdmin || booking.user?.email === email) && <button
                             onClick={() => startEdit(booking)}
                             className="btn btn-sm btn-custom btn-custom-primary me-1"
                           >
                             Edit
                           </button>}
-                          {isAdmin && <button
+                          {(isAdmin || booking.user?.email === email) && <button
                             onClick={() => deleteBooking(booking.bookingID)}
                             className="btn btn-sm btn-custom btn-custom-danger"
                           >
-                            Delete
+                            {isAdmin ? "Delete" : "Cancel"}
                           </button>}
                         </>
                       )}

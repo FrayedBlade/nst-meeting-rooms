@@ -45,6 +45,11 @@ public class BookingService {
                 booking.getEndDateTime()
         );
 
+        // Only APPROVED bookings (or legacy null) block a time slot
+        overlappingBookings = overlappingBookings.stream()
+                .filter(b -> b.getStatus() == null || "APPROVED".equals(b.getStatus()))
+                .toList();
+
         // If updating an existing booking, exclude it from the overlap check
         if (booking.getBookingID() != null) {
             overlappingBookings = overlappingBookings.stream()
@@ -75,6 +80,32 @@ public class BookingService {
     }
 
     public List<Booking> findAllActiveBookings() {
-        return bookingRepository.findByEndDateTimeAfter(LocalDateTime.now());
+        return bookingRepository.findByEndDateTimeAfter(LocalDateTime.now())
+                .stream()
+                .filter(b -> b.getStatus() == null || "APPROVED".equals(b.getStatus()))
+                .toList();
+    }
+
+    public Booking updateStatus(Integer bookingId, String status) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
+
+        if ("APPROVED".equals(status)) {
+            List<Booking> overlapping = bookingRepository.findOverlappingBookings(
+                    booking.getRoom().getRoomID(),
+                    booking.getStartDateTime(),
+                    booking.getEndDateTime()
+            ).stream()
+                    .filter(b -> b.getStatus() == null || "APPROVED".equals(b.getStatus()))
+                    .filter(b -> !b.getBookingID().equals(bookingId))
+                    .toList();
+
+            if (!overlapping.isEmpty()) {
+                throw new IllegalStateException("Room is already booked for the selected time period");
+            }
+        }
+
+        booking.setStatus(status);
+        return bookingRepository.save(booking);
     }
 }
