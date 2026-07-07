@@ -4,6 +4,7 @@ import UserList from "./components/UserList";
 import BookingList from "./components/BookingList";
 import BuildingList from "./components/BuildingList";
 import Login from "./components/Login";
+import ChangePassword from "./components/ChangePassword";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./context/AuthContext";
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -45,6 +46,7 @@ function AppLayout() {
             <small className="user-role">{isAdmin ? 'Administrator' : 'User'}</small>
           </div>
           <button className="btn btn-logout mt-2" onClick={logout}>Sign Out</button>
+          <NavLink to="/change-password" className="btn btn-logout mt-1" style={{display:'block', textAlign:'center', textDecoration:'none', fontSize:'0.8rem'}}>Change Password</NavLink>
         </div>
       </aside>
 
@@ -56,6 +58,7 @@ function AppLayout() {
             <Route path="/users" element={<ProtectedRoute><UserList /></ProtectedRoute>} />
             <Route path="/bookings" element={<ProtectedRoute><BookingList /></ProtectedRoute>} />
             <Route path="/buildings" element={<ProtectedRoute><BuildingList /></ProtectedRoute>} />
+            <Route path="/change-password" element={<ProtectedRoute><ChangePassword /></ProtectedRoute>} />
             <Route path="/" element={<Navigate to="/rooms" replace />} />
           </Routes>
         </div>
