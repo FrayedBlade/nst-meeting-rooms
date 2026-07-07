@@ -34,6 +34,7 @@ function BookingList() {
 
   useEffect(() => {
     fetchAllData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchAllData = async () => {
@@ -287,7 +288,7 @@ function BookingList() {
     try {
       await api.put(`/booking/${id}/reject`);
       fetchAllData();
-    } catch (err) {
+    } catch {
       setError("Failed to reject booking");
     }
   };
