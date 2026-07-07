@@ -273,6 +273,25 @@ function BookingList() {
     }
   };
 
+  const approveBooking = async (id) => {
+    try {
+      await api.put(`/booking/${id}/approve`);
+      fetchAllData();
+    } catch (err) {
+      const msg = err.response?.data;
+      setError(typeof msg === "string" ? msg : "Failed to approve booking — room may already be booked for this time.");
+    }
+  };
+
+  const rejectBooking = async (id) => {
+    try {
+      await api.put(`/booking/${id}/reject`);
+      fetchAllData();
+    } catch (err) {
+      setError("Failed to reject booking");
+    }
+  };
+
   const applyFilter = () => {
     if (filterBy === "all") {
       fetchBookings();
@@ -292,10 +311,10 @@ function BookingList() {
   };
 
   const getDisplayedBookings = () => {
-    if (showActiveOnly) {
-      return bookings.filter(booking => isBookingActive(booking));
-    }
-    return bookings;
+    let result = bookings;
+    if (filterBy === "pending") result = result.filter(b => b.status === "PENDING");
+    if (showActiveOnly) result = result.filter(b => isBookingActive(b));
+    return result;
   };
 
   return (
@@ -336,6 +355,7 @@ function BookingList() {
               <option value="user">By User</option>
               <option value="room">By Room</option>
               <option value="active">Active Only</option>
+              {isAdmin && <option value="pending">Pending Only</option>}
             </select>
           </div>
 
@@ -617,6 +637,18 @@ function BookingList() {
                         </>
                       ) : (
                         <>
+                          {isAdmin && booking.status === "PENDING" && <button
+                            onClick={() => approveBooking(booking.bookingID)}
+                            className="btn btn-sm btn-custom btn-custom-success me-1"
+                          >
+                            Approve
+                          </button>}
+                          {isAdmin && booking.status === "PENDING" && <button
+                            onClick={() => rejectBooking(booking.bookingID)}
+                            className="btn btn-sm btn-custom btn-custom-danger me-1"
+                          >
+                            Reject
+                          </button>}
                           {(isAdmin || booking.user?.email === email) && <button
                             onClick={() => startEdit(booking)}
                             className="btn btn-sm btn-custom btn-custom-primary me-1"
