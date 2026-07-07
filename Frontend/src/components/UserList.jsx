@@ -13,7 +13,8 @@ function UserList() {
     personalID: "", 
     email: "", 
     phone: "",
-    roleId: ""
+    roleId: "",
+    password: ""
   });
   const [editingUser, setEditingUser] = useState(null);
   const [editForm, setEditForm] = useState({
@@ -22,7 +23,8 @@ function UserList() {
     personalID: "", 
     email: "", 
     phone: "",
-    roleId: ""
+    roleId: "",
+    newPassword: ""
   });
   const [selectedUser, setSelectedUser] = useState(null);
   const [userBookings, setUserBookings] = useState([]);
@@ -173,7 +175,8 @@ function UserList() {
         personalID: newUser.personalID.trim(),
         email: newUser.email.trim() || null,
         phone: newUser.phone.trim() || null,
-        role: newUser.roleId ? { roleID: parseInt(newUser.roleId) } : null
+        role: newUser.roleId ? { roleID: parseInt(newUser.roleId) } : null,
+        password: newUser.password || null
       };
       
       await api.post("/user", userData);
@@ -183,7 +186,8 @@ function UserList() {
         personalID: "", 
         email: "", 
         phone: "",
-        roleId: ""
+        roleId: "",
+        password: ""
       });
       setError("");
       fetchUsers();
@@ -205,7 +209,8 @@ function UserList() {
       personalID: user.personalID,
       email: user.email || "",
       phone: user.phone || "",
-      roleId: user.role?.roleID || ""
+      roleId: user.role?.roleID || "",
+      newPassword: ""
     });
     setSelectedUser(null);
   };
@@ -218,7 +223,8 @@ function UserList() {
       personalID: "", 
       email: "", 
       phone: "",
-      roleId: ""
+      roleId: "",
+      newPassword: ""
     });
   };
 
@@ -232,7 +238,8 @@ function UserList() {
         personalID: editForm.personalID.trim(),
         email: editForm.email.trim() || null,
         phone: editForm.phone.trim() || null,
-        role: editForm.roleId ? { roleID: parseInt(editForm.roleId) } : null
+        role: editForm.roleId ? { roleID: parseInt(editForm.roleId) } : null,
+        password: editForm.newPassword.trim() || null
       };
       
       await api.put(`/user/${id}`, userData);
@@ -243,7 +250,8 @@ function UserList() {
         personalID: "", 
         email: "", 
         phone: "",
-        roleId: ""
+        roleId: "",
+        newPassword: ""
       });
       setError("");
       fetchUsers();
@@ -372,6 +380,33 @@ function UserList() {
               />
             </div>
             <div className="col-md-2">
+              <label className="form-label small">Password *</label>
+              <input
+                type="password"
+                className="form-control"
+                placeholder="Min 6 characters"
+                value={newUser.password}
+                onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                minLength="6"
+                required
+              />
+            </div>
+            <div className="col-md-2">
+              <label className="form-label small">Role</label>
+              <select
+                className="form-select"
+                value={newUser.roleId}
+                onChange={(e) => setNewUser({ ...newUser, roleId: e.target.value })}
+              >
+                <option value="">No role</option>
+                {roles.map(r => (
+                  <option key={r.roleID} value={r.roleID}>
+                    {r.name === "ROLE_ADMIN" ? "Admin" : "User"}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-md-2">
               <button type="submit" className="btn btn-custom btn-custom-primary w-100">
                 Add User
               </button>
@@ -478,6 +513,18 @@ function UserList() {
                         user.phone || <span className="text-muted">-</span>
                       )}
                     </td>
+                    {editingUser === user.userID && (
+                      <td>
+                        <input
+                          type="password"
+                          className="form-control form-control-sm"
+                          placeholder="New password (optional)"
+                          value={editForm.newPassword}
+                          onChange={(e) => setEditForm({ ...editForm, newPassword: e.target.value })}
+                          minLength="6"
+                        />
+                      </td>
+                    )}
                     <td>
                       {editingUser === user.userID && isAdmin ? (
                         <select
