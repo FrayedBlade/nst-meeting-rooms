@@ -3,7 +3,7 @@ import api from "../api/api";
 import { useAuth } from "../context/AuthContext";
 
 function BookingList() {
-  const { role } = useAuth();
+  const { role, email } = useAuth();
   const isAdmin = role === "ROLE_ADMIN";
   const [bookings, setBookings] = useState([]);
   const [users, setUsers] = useState([]);
@@ -30,6 +30,7 @@ function BookingList() {
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
 
   useEffect(() => {
     fetchAllData();
@@ -140,7 +141,7 @@ function BookingList() {
   const validateBookingForm = (booking) => {
     setError("");
     
-    if (!booking.userID) {
+    if (isAdmin && !booking.userID) {
       setError("User is required");
       return false;
     }
@@ -176,8 +177,9 @@ function BookingList() {
     if (!validateBookingForm(newBooking)) return;
     
     try {
+      const ownUser = !isAdmin ? users.find(u => u.email === email) : null;
       const bookingData = {
-        user: { userID: parseInt(newBooking.userID) },
+        user: { userID: isAdmin ? parseInt(newBooking.userID) : ownUser?.userID },
         room: { roomID: parseInt(newBooking.roomID) },
         startDateTime: newBooking.startDateTime,
         endDateTime: newBooking.endDateTime
@@ -193,6 +195,7 @@ function BookingList() {
       setNewBookingBuilding("");
       setShowCreateForm(false);
       setError("");
+      if (!isAdmin) setSuccessMsg("Booking request submitted — awaiting admin approval.");
       fetchAllData();
     } catch (err) {
       console.error("Error creating booking:", err);
@@ -313,6 +316,12 @@ function BookingList() {
             ></button>
           </div>
         )}
+        {successMsg && (
+          <div className="alert alert-success alert-custom alert-dismissible fade show" role="alert">
+            {successMsg}
+            <button type="button" className="btn-close" onClick={() => setSuccessMsg("")} aria-label="Close"></button>
+          </div>
+        )}
 
         {/* Filters and Actions */}
         <div className="mb-4 d-flex gap-2 align-items-end flex-wrap">
@@ -370,12 +379,18 @@ function BookingList() {
           >
             {showCreateForm ? "Cancel" : "New Booking"}
           </button>}
+          {!isAdmin && <button
+            onClick={() => setShowCreateForm(!showCreateForm)}
+            className="btn btn-custom btn-custom-success ms-auto"
+          >
+            {showCreateForm ? "Cancel" : "Request Booking"}
+          </button>}
         </div>
 
         {/* Create Booking Form */}
         {showCreateForm && (
           <div className="form-custom mb-4">
-            <h3>Create New Booking</h3>
+            <h3>{isAdmin ? "Create New Booking" : "Request a Booking"}</h3>
             <form onSubmit={createBooking} className="row g-3">
               <div className="col-md-3">
                 <label className="form-label">Building</label>
@@ -393,7 +408,7 @@ function BookingList() {
                   ))}
                 </select>
               </div>
-              <div className="col-md-3">
+              {isAdmin && <div className="col-md-3">
                 <label className="form-label">User *</label>
                 <select
                   className="form-select"
@@ -408,7 +423,7 @@ function BookingList() {
                     </option>
                   ))}
                 </select>
-              </div>
+              </div>}
               <div className="col-md-3">
                 <label className="form-label">Room *</label>
                 <select
@@ -504,19 +519,23 @@ function BookingList() {
                   <tr key={booking.bookingID}>
                     <td>
                       {editingBooking === booking.bookingID ? (
-                        <select
-                          className="form-select form-select-sm"
-                          value={editForm.userID}
-                          onChange={(e) => setEditForm({ ...editForm, userID: e.target.value })}
-                          required
-                        >
-                          <option value="">Select User</option>
-                          {users.map(user => (
-                            <option key={user.userID} value={user.userID}>
-                              {user.firstName} {user.lastName}
-                            </option>
-                          ))}
-                        </select>
+                        isAdmin ? (
+                          <select
+                            className="form-select form-select-sm"
+                            value={editForm.userID}
+                            onChange={(e) => setEditForm({ ...editForm, userID: e.target.value })}
+                            required
+                          >
+                            <option value="">Select User</option>
+                            {users.map(user => (
+                              <option key={user.userID} value={user.userID}>
+                                {user.firstName} {user.lastName}
+                              </option>
+                            ))}
+                          </select>
+                        ) : (
+                          <span className="fw-medium">{booking.user?.firstName} {booking.user?.lastName}</span>
+                        )
                       ) : (
                         booking.user ? `${booking.user.firstName} ${booking.user.lastName}` : "Unknown"
                       )}
@@ -598,17 +617,17 @@ function BookingList() {
                         </>
                       ) : (
                         <>
-                          {isAdmin && <button
+                          {(isAdmin || booking.user?.email === email) && <button
                             onClick={() => startEdit(booking)}
                             className="btn btn-sm btn-custom btn-custom-primary me-1"
                           >
                             Edit
                           </button>}
-                          {isAdmin && <button
+                          {(isAdmin || booking.user?.email === email) && <button
                             onClick={() => deleteBooking(booking.bookingID)}
                             className="btn btn-sm btn-custom btn-custom-danger"
                           >
-                            Delete
+                            {isAdmin ? "Delete" : "Cancel"}
                           </button>}
                         </>
                       )}
