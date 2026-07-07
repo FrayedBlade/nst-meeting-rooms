@@ -133,7 +133,8 @@ function BookingList() {
   };
 
   const isBookingActive = (booking) => {
-    return new Date(booking.endDateTime) > new Date();
+    const approved = booking.status == null || booking.status === "APPROVED";
+    return approved && new Date(booking.endDateTime) > new Date();
   };
 
   const validateBookingForm = (booking) => {
@@ -569,7 +570,11 @@ function BookingList() {
                       )}
                     </td>
                     <td>
-                      {isBookingActive(booking) ? (
+                      {booking.status === "PENDING" ? (
+                        <span className="badge badge-custom bg-warning text-dark">Pending</span>
+                      ) : booking.status === "REJECTED" ? (
+                        <span className="badge badge-custom bg-danger">Rejected</span>
+                      ) : new Date(booking.endDateTime) > new Date() ? (
                         <span className="badge badge-custom bg-success">Active</span>
                       ) : (
                         <span className="badge badge-custom bg-secondary">Completed</span>
