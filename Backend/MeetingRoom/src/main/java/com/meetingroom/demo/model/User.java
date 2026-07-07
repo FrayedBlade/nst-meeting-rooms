@@ -1,5 +1,6 @@
 package com.meetingroom.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -49,4 +50,12 @@ public class User {
     @CreationTimestamp
     @Column(updatable = false, name = "RegistrationDate")
     private LocalDate registrationDate;
+
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(length = 100)
+    private String password;
+
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 }

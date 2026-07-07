@@ -15,6 +15,7 @@ jobs:
   # ──────────────────────────────────────────────
   # Job 1: Build & Test Backend (Maven + Java 21)
   # ──────────────────────────────────────────────
+  # PR test
   test-backend:
     name: Backend - Build & Test
     runs-on: ubuntu-latest

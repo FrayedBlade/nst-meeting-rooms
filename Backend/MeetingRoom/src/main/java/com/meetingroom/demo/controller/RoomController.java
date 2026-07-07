@@ -48,6 +48,7 @@ public class RoomController {
         room.setRoomNumber(updatedRoom.getRoomNumber());
         room.setLocation(updatedRoom.getLocation());
         room.setCapacity(updatedRoom.getCapacity());
+        room.setBuilding(updatedRoom.getBuilding());
 
         return ResponseEntity.ok(roomService.save(room));
     }

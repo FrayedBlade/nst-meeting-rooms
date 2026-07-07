@@ -1,14 +1,20 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
+import { useAuth } from "../context/AuthContext";
 
 function UserList() {
+  const { role } = useAuth();
+  const isAdmin = role === "ROLE_ADMIN";
   const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [newUser, setNewUser] = useState({
     firstName: "", 
     lastName: "", 
     personalID: "", 
     email: "", 
-    phone: ""
+    phone: "",
+    roleId: "",
+    password: ""
   });
   const [editingUser, setEditingUser] = useState(null);
   const [editForm, setEditForm] = useState({
@@ -16,7 +22,9 @@ function UserList() {
     lastName: "", 
     personalID: "", 
     email: "", 
-    phone: ""
+    phone: "",
+    roleId: "",
+    newPassword: ""
   });
   const [selectedUser, setSelectedUser] = useState(null);
   const [userBookings, setUserBookings] = useState([]);
@@ -26,7 +34,17 @@ function UserList() {
 
   useEffect(() => {
     fetchUsers();
+    fetchRoles();
   }, []);
+
+  const fetchRoles = async () => {
+    try {
+      const res = await api.get("/role");
+      setRoles(res.data);
+    } catch (err) {
+      console.error("Error fetching roles:", err);
+    }
+  };
 
   const fetchUsers = async () => {
     try {
@@ -156,7 +174,9 @@ function UserList() {
         lastName: newUser.lastName.trim(),
         personalID: newUser.personalID.trim(),
         email: newUser.email.trim() || null,
-        phone: newUser.phone.trim() || null
+        phone: newUser.phone.trim() || null,
+        role: newUser.roleId ? { roleID: parseInt(newUser.roleId) } : null,
+        password: newUser.password || null
       };
       
       await api.post("/user", userData);
@@ -165,7 +185,9 @@ function UserList() {
         lastName: "", 
         personalID: "", 
         email: "", 
-        phone: "" 
+        phone: "",
+        roleId: "",
+        password: ""
       });
       setError("");
       fetchUsers();
@@ -186,7 +208,9 @@ function UserList() {
       lastName: user.lastName,
       personalID: user.personalID,
       email: user.email || "",
-      phone: user.phone || ""
+      phone: user.phone || "",
+      roleId: user.role?.roleID || "",
+      newPassword: ""
     });
     setSelectedUser(null);
   };
@@ -198,7 +222,9 @@ function UserList() {
       lastName: "", 
       personalID: "", 
       email: "", 
-      phone: ""
+      phone: "",
+      roleId: "",
+      newPassword: ""
     });
   };
 
@@ -211,7 +237,9 @@ function UserList() {
         lastName: editForm.lastName.trim(),
         personalID: editForm.personalID.trim(),
         email: editForm.email.trim() || null,
-        phone: editForm.phone.trim() || null
+        phone: editForm.phone.trim() || null,
+        role: editForm.roleId ? { roleID: parseInt(editForm.roleId) } : null,
+        password: editForm.newPassword.trim() || null
       };
       
       await api.put(`/user/${id}`, userData);
@@ -221,7 +249,9 @@ function UserList() {
         lastName: "", 
         personalID: "", 
         email: "", 
-        phone: ""
+        phone: "",
+        roleId: "",
+        newPassword: ""
       });
       setError("");
       fetchUsers();
@@ -287,7 +317,7 @@ function UserList() {
         )}
 
         {/* Add New User Form */}
-        <div className="form-custom mb-4">
+        {isAdmin && <div className="form-custom mb-4">
           <h3>Add New Team Member</h3>
           <form onSubmit={createUser} className="row g-3 align-items-end">
             <div className="col-md-2">
@@ -350,12 +380,39 @@ function UserList() {
               />
             </div>
             <div className="col-md-2">
+              <label className="form-label small">Password *</label>
+              <input
+                type="password"
+                className="form-control"
+                placeholder="Min 6 characters"
+                value={newUser.password}
+                onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+                minLength="6"
+                required
+              />
+            </div>
+            <div className="col-md-2">
+              <label className="form-label small">Role</label>
+              <select
+                className="form-select"
+                value={newUser.roleId}
+                onChange={(e) => setNewUser({ ...newUser, roleId: e.target.value })}
+              >
+                <option value="">No role</option>
+                {roles.map(r => (
+                  <option key={r.roleID} value={r.roleID}>
+                    {r.name === "ROLE_ADMIN" ? "Admin" : "User"}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-md-2">
               <button type="submit" className="btn btn-custom btn-custom-primary w-100">
                 Add User
               </button>
             </div>
           </form>
-        </div>
+        </div>}
 
         {/* Users Table */}
         <div className="table-responsive">
@@ -366,13 +423,14 @@ function UserList() {
                 <th style={{ width: "140px" }}>Personal ID</th>
                 <th>Email</th>
                 <th style={{ width: "120px" }}>Phone</th>
+                <th style={{ width: "100px" }}>Role</th>
                 <th style={{ width: "300px" }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="5" className="text-center">
+                  <td colSpan="6" className="text-center">
                     <div className="spinner-border spinner-border-sm" role="status">
                       <span className="visually-hidden">Loading...</span>
                     </div>
@@ -381,7 +439,7 @@ function UserList() {
                 </tr>
               ) : users.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="text-center text-muted">
+                  <td colSpan="6" className="text-center text-muted">
                     No users found
                   </td>
                 </tr>
@@ -455,6 +513,38 @@ function UserList() {
                         user.phone || <span className="text-muted">-</span>
                       )}
                     </td>
+                    {editingUser === user.userID && (
+                      <td>
+                        <input
+                          type="password"
+                          className="form-control form-control-sm"
+                          placeholder="New password (optional)"
+                          value={editForm.newPassword}
+                          onChange={(e) => setEditForm({ ...editForm, newPassword: e.target.value })}
+                          minLength="6"
+                        />
+                      </td>
+                    )}
+                    <td>
+                      {editingUser === user.userID && isAdmin ? (
+                        <select
+                          className="form-select form-select-sm"
+                          value={editForm.roleId}
+                          onChange={(e) => setEditForm({ ...editForm, roleId: e.target.value })}
+                        >
+                          <option value="">No role</option>
+                          {roles.map(r => (
+                            <option key={r.roleID} value={r.roleID}>
+                              {r.name === "ROLE_ADMIN" ? "Admin" : "User"}
+                            </option>
+                          ))}
+                        </select>
+                      ) : (
+                        <span className={`badge badge-custom ${user.role?.name === "ROLE_ADMIN" ? "bg-danger" : "bg-primary"}`}>
+                          {user.role?.name === "ROLE_ADMIN" ? "Admin" : user.role ? "User" : "-"}
+                        </span>
+                      )}
+                    </td>
                     <td>
                       {editingUser === user.userID ? (
                         <>
@@ -473,24 +563,24 @@ function UserList() {
                         </>
                       ) : (
                         <>
-                          <button
+                          {isAdmin && <button
                             onClick={() => startEdit(user)}
                             className="btn btn-sm btn-custom btn-custom-primary me-1"
                           >
                             Edit
-                          </button>
+                          </button>}
                           <button
                             onClick={() => fetchUserById(user.userID)}
                             className="btn btn-sm btn-custom btn-custom-success me-1"
                           >
                             Bookings
                           </button>
-                          <button
+                          {isAdmin && <button
                             onClick={() => deleteUser(user.userID)}
                             className="btn btn-sm btn-custom btn-custom-danger"
                           >
                             Delete
-                          </button>
+                          </button>}
                         </>
                       )}
                     </td>

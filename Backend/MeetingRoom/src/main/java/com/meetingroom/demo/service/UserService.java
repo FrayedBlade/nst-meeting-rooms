@@ -5,6 +5,7 @@ import com.meetingroom.demo.model.User;
 import com.meetingroom.demo.repository.BookingRepository;
 import com.meetingroom.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -20,6 +21,9 @@ public class UserService {
     @Autowired
     private BookingRepository bookingRepository;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public List<User> findAll() {
         return userRepository.findAll();
     }
@@ -28,7 +32,15 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     public User save(User user) {
+        if (user.getPassword() != null && !user.getPassword().isBlank()
+                && !user.getPassword().startsWith("$2a$")) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
         return userRepository.save(user);
     }
 

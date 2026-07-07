@@ -1,27 +1,43 @@
 import { useEffect, useState } from "react";
 import api from "../api/api";
+import { useAuth } from "../context/AuthContext";
 
 function RoomList() {
+  const { role } = useAuth();
+  const isAdmin = role === "ROLE_ADMIN";
   const [rooms, setRooms] = useState([]);
+  const [buildings, setBuildings] = useState([]);
   const [newRoom, setNewRoom] = useState({
     roomName: "",
     roomNumber: "",
     location: "",
-    capacity: 10
+    capacity: 10,
+    buildingId: ""
   });
   const [editingRoom, setEditingRoom] = useState(null);
   const [editForm, setEditForm] = useState({
     roomName: "",
     roomNumber: "",
     location: "",
-    capacity: 10
+    capacity: 10,
+    buildingId: ""
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
     fetchRooms();
+    fetchBuildings();
   }, []);
+
+  const fetchBuildings = async () => {
+    try {
+      const res = await api.get("/building");
+      setBuildings(res.data);
+    } catch (err) {
+      console.error("Error fetching buildings:", err);
+    }
+  };
 
   const fetchRooms = async () => {
     try {
@@ -69,14 +85,10 @@ function RoomList() {
     try {
       await api.post("/room", {
         ...newRoom,
-        capacity: parseInt(newRoom.capacity)
+        capacity: parseInt(newRoom.capacity),
+        building: newRoom.buildingId ? { buildingID: parseInt(newRoom.buildingId) } : null
       });
-      setNewRoom({ 
-        roomName: "", 
-        roomNumber: "", 
-        location: "", 
-        capacity: 10 
-      });
+      setNewRoom({ roomName: "", roomNumber: "", location: "", capacity: 10, buildingId: "" });
       setError("");
       fetchRooms();
     } catch (err) {
@@ -99,18 +111,14 @@ function RoomList() {
       roomName: room.roomName,
       roomNumber: room.roomNumber,
       location: room.location || "",
-      capacity: room.capacity
+      capacity: room.capacity,
+      buildingId: room.building?.buildingID || ""
     });
   };
 
   const cancelEdit = () => {
     setEditingRoom(null);
-    setEditForm({
-      roomName: "",
-      roomNumber: "",
-      location: "",
-      capacity: 10
-    });
+    setEditForm({ roomName: "", roomNumber: "", location: "", capacity: 10, buildingId: "" });
   };
 
   const updateRoom = async (id) => {
@@ -119,15 +127,11 @@ function RoomList() {
     try {
       await api.put(`/room/${id}`, {
         ...editForm,
-        capacity: parseInt(editForm.capacity)
+        capacity: parseInt(editForm.capacity),
+        building: editForm.buildingId ? { buildingID: parseInt(editForm.buildingId) } : null
       });
       setEditingRoom(null);
-      setEditForm({
-        roomName: "",
-        roomNumber: "",
-        location: "",
-        capacity: 10
-      });
+      setEditForm({ roomName: "", roomNumber: "", location: "", capacity: 10, buildingId: "" });
       setError("");
       fetchRooms();
     } catch (err) {
@@ -183,7 +187,7 @@ function RoomList() {
         )}
 
         {/* Add New Room Form */}
-        <div className="form-custom mb-4">
+        {isAdmin && <div className="form-custom mb-4">
           <h3>Add New Room</h3>
           <form onSubmit={createRoom} className="row g-3 align-items-end">
             <div className="col-md-3">
@@ -236,12 +240,25 @@ function RoomList() {
               />
             </div>
             <div className="col-md-2">
+              <label className="form-label small">Building</label>
+              <select
+                className="form-select"
+                value={newRoom.buildingId}
+                onChange={(e) => setNewRoom({ ...newRoom, buildingId: e.target.value })}
+              >
+                <option value="">None</option>
+                {buildings.map(b => (
+                  <option key={b.buildingID} value={b.buildingID}>{b.name}</option>
+                ))}
+              </select>
+            </div>
+            <div className="col-md-2">
               <button type="submit" className="btn btn-custom btn-custom-primary w-100">
                 Add Room
               </button>
             </div>
           </form>
-        </div>
+        </div>}
 
         {/* Rooms Table */}
         <div className="table-responsive">
@@ -252,13 +269,14 @@ function RoomList() {
                 <th style={{ width: "120px" }}>Room Number</th>
                 <th>Location</th>
                 <th style={{ width: "100px" }}>Capacity</th>
+                <th style={{ width: "130px" }}>Building</th>
                 <th style={{ width: "200px" }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="5" className="text-center">
+                  <td colSpan="6" className="text-center">
                     <div className="spinner-border spinner-border-sm" role="status">
                       <span className="visually-hidden">Loading...</span>
                     </div>
@@ -267,7 +285,7 @@ function RoomList() {
                 </tr>
               ) : rooms.length === 0 ? (
                 <tr>
-                  <td colSpan="5" className="text-center text-muted">
+                  <td colSpan="6" className="text-center text-muted">
                     No rooms found
                   </td>
                 </tr>
@@ -333,6 +351,24 @@ function RoomList() {
                     </td>
                     <td>
                       {editingRoom === room.roomID ? (
+                        <select
+                          className="form-select form-select-sm"
+                          value={editForm.buildingId}
+                          onChange={(e) => setEditForm({ ...editForm, buildingId: e.target.value })}
+                        >
+                          <option value="">None</option>
+                          {buildings.map(b => (
+                            <option key={b.buildingID} value={b.buildingID}>{b.name}</option>
+                          ))}
+                        </select>
+                      ) : (
+                        room.building
+                          ? <span className="badge badge-custom bg-secondary">{room.building.name}</span>
+                          : <span className="text-muted">-</span>
+                      )}
+                    </td>
+                    <td>
+                      {editingRoom === room.roomID ? (
                         <>
                           <button
                             onClick={() => updateRoom(room.roomID)}
@@ -349,18 +385,18 @@ function RoomList() {
                         </>
                       ) : (
                         <>
-                          <button
+                          {isAdmin && <button
                             onClick={() => startEdit(room)}
                             className="btn btn-sm btn-custom btn-custom-primary me-1"
                           >
                             Edit
-                          </button>
-                          <button
+                          </button>}
+                          {isAdmin && <button
                             onClick={() => deleteRoom(room.roomID)}
                             className="btn btn-sm btn-custom btn-custom-danger"
                           >
                             Delete
-                          </button>
+                          </button>}
                         </>
                       )}
                     </td>
