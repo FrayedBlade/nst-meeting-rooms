@@ -13,6 +13,7 @@ com/meetingroom/demo/service/RoomService.class
 com/meetingroom/demo/model/Building.class
 com/meetingroom/demo/service/RoleService.class
 com/meetingroom/demo/dto/RegisterRequest.class
+com/meetingroom/demo/dto/ChangePasswordRequest.class
 com/meetingroom/demo/dto/AuthResponse.class
 com/meetingroom/demo/controller/BookingController.class
 com/meetingroom/demo/config/DataInitializer.class

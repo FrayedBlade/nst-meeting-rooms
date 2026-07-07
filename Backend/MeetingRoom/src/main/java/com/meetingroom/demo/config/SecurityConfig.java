@@ -54,6 +54,7 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/auth/change-password").authenticated()
                 .requestMatchers("/auth/**", "/actuator/health").permitAll()
                 .requestMatchers(org.springframework.http.HttpMethod.GET,
                         "/room/**", "/building/**", "/user/**", "/booking/**", "/role/**").authenticated()

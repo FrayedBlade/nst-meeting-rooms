@@ -32,6 +32,10 @@ public class UserService {
         return userRepository.findById(userId);
     }
 
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     public User save(User user) {
         if (user.getPassword() != null && !user.getPassword().isBlank()
                 && !user.getPassword().startsWith("$2a$")) {
