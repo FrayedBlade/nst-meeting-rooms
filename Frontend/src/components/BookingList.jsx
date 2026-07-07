@@ -8,6 +8,8 @@ function BookingList() {
   const [bookings, setBookings] = useState([]);
   const [users, setUsers] = useState([]);
   const [rooms, setRooms] = useState([]);
+  const [buildings, setBuildings] = useState([]);
+  const [newBookingBuilding, setNewBookingBuilding] = useState("");
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showCreateForm, setShowCreateForm] = useState(false);
   const [showActiveOnly, setShowActiveOnly] = useState(false);
@@ -37,8 +39,18 @@ function BookingList() {
     await Promise.all([
       fetchBookings(),
       fetchUsers(),
-      fetchRooms()
+      fetchRooms(),
+      fetchBuildings()
     ]);
+  };
+
+  const fetchBuildings = async () => {
+    try {
+      const res = await api.get("/building");
+      setBuildings(res.data);
+    } catch (err) {
+      console.error("Error fetching buildings:", err);
+    }
   };
 
   const fetchBookings = async () => {
@@ -177,6 +189,7 @@ function BookingList() {
         startDateTime: "",
         endDateTime: ""
       });
+      setNewBookingBuilding("");
       setShowCreateForm(false);
       setError("");
       fetchAllData();
@@ -364,6 +377,22 @@ function BookingList() {
             <h3>Create New Booking</h3>
             <form onSubmit={createBooking} className="row g-3">
               <div className="col-md-3">
+                <label className="form-label">Building</label>
+                <select
+                  className="form-select"
+                  value={newBookingBuilding}
+                  onChange={(e) => {
+                    setNewBookingBuilding(e.target.value);
+                    setNewBooking({ ...newBooking, roomID: "" });
+                  }}
+                >
+                  <option value="">All buildings</option>
+                  {buildings.map(b => (
+                    <option key={b.buildingID} value={b.buildingID}>{b.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="col-md-3">
                 <label className="form-label">User *</label>
                 <select
                   className="form-select"
@@ -388,11 +417,13 @@ function BookingList() {
                   required
                 >
                   <option value="">Select Room</option>
-                  {rooms.map(room => (
-                    <option key={room.roomID} value={room.roomID}>
-                      {room.roomName}
-                    </option>
-                  ))}
+                  {rooms
+                    .filter(r => !newBookingBuilding || r.building?.buildingID === parseInt(newBookingBuilding))
+                    .map(room => (
+                      <option key={room.roomID} value={room.roomID}>
+                        {room.roomName}
+                      </option>
+                    ))}
                 </select>
               </div>
               <div className="col-md-3">
@@ -444,6 +475,7 @@ function BookingList() {
               <tr>
                 <th>User</th>
                 <th>Room</th>
+                <th>Building</th>
                 <th>Start Time</th>
                 <th>End Time</th>
                 <th>Status</th>
@@ -453,7 +485,7 @@ function BookingList() {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="6" className="text-center">
+                  <td colSpan="7" className="text-center">
                     <div className="spinner-border spinner-border-sm" role="status">
                       <span className="visually-hidden">Loading...</span>
                     </div>
@@ -462,7 +494,7 @@ function BookingList() {
                 </tr>
               ) : getDisplayedBookings().length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="text-center text-muted">
+                  <td colSpan="7" className="text-center text-muted">
                     No bookings found
                   </td>
                 </tr>
@@ -506,6 +538,9 @@ function BookingList() {
                       ) : (
                         booking.room ? booking.room.roomName : "Unknown"
                       )}
+                    </td>
+                    <td>
+                      {booking.room?.building?.name || <span className="text-muted">-</span>}
                     </td>
                     <td>
                       {editingBooking === booking.bookingID ? (
