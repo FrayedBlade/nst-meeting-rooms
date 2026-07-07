@@ -19,7 +19,7 @@ function Login() {
       const response = await api.post("/auth/login", { email, password });
       login(response.data);
       navigate("/rooms");
-    } catch (err) {
+    } catch {
       setError("Invalid email or password.");
     } finally {
       setLoading(false);
